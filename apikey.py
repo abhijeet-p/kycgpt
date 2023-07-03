@@ -1,1 +1,1 @@
-apikey='my-gpt-key'
+apikey='my-gpt-token'

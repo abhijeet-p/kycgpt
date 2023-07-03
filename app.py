@@ -16,8 +16,8 @@ st.title('KYC gpt')
 
 # initialize pinecone
 pinecone.init(
-    api_key="my-pinecone-pi-key",  # find at app.pinecone.io
-    environment="my-pinecone-instance-name"  # next to api key in console
+    api_key="my-pinecone-token",  # find at app.pinecone.io
+    environment="my-pinecone-env"  # next to aclepi key in console
 )
 
 loader = SitemapLoader(
@@ -38,13 +38,13 @@ embeddings = OpenAIEmbeddings()
 index_name = "anz"
 
 ##create a new index
-docsearch = Pinecone.from_documents(docs_chunks, embeddings, index_name=index_name)
+##docsearch = Pinecone.from_documents(docs_chunks, embeddings, index_name=index_name)
 
 # if you already have an index, you can load it like this
-#docsearch = Pinecone.from_existing_index(index_name, embeddings)
+docsearch = Pinecone.from_existing_index(index_name, embeddings)
 query = "What all details i need to submit for KYC"
 docs = docsearch.similarity_search(query)
-print(docs[0])
+##print(docs[0])
 
 
 ##prompt = st.text_input('ask me here')
@@ -59,10 +59,10 @@ llm = OpenAI(temperature=0.9)
 
 qa_with_sources = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever(), return_source_documents=True)
 
-query = "What all details i need to submit for KYC"
-result = qa_with_sources({"query": query})
-print("Question :    " + query )
-print("Answer :    " +result["result"])
+query = st.text_input('ask me here')
+if query:
+    result = qa_with_sources({"query": query})
+    st.write(result["result"])
 
 
 # Testing OpenAI functions
